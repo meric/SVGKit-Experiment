@@ -8,6 +8,9 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+NSString* SKTrim(NSString*);
+NSString* SKTrimNumber(NSString *);
+
 @interface SVGKitTests : SenTestCase
 
 @end

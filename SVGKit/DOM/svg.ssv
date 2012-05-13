@@ -1,0 +1,70 @@
+// built-in types: number double string
+
+// svg literals
+
+literal none inherit currentColor disable magnify defer meet slice xMinYMin
+literal xMidYMin xMaxYMin xMinYMid xMidYMid xMaxYMid xMinYMax xMidYMax xMaxYMax
+literal matrix translate scale rotate skewX skewY %,SKPercent em,SKEM ex,SKEX
+literal px,SKPX in,SKIN cm,SKCM mm,SKMM pt,SKPT pc,SKPC deg,SKDEG grad,SKGRAD
+literal rad,SKRAD Hz,SKHZ kHz,SKKHZ normal italic oblique small-caps bold bolder
+literal lighter 100 200 300 400 500 600 700 800 900 wider narrower
+literal ultra-condensed extra-condensed condensed semi-condensed semi-expanded
+literal expanded extra-expanded ultra-expanded caption icon menu message-box
+literal small-caption status-bar kerning underline overline line-through blink
+literal rgba,SKRGBA rgb,SKRGB #,SKHASH
+
+// literal group
+
+ltype inherit inherit
+ltype none none
+ltype normal normal
+ltype preserveAspectRatio.defer defer
+ltype preserveAspectRatio.align xMinYMin xMidYMin xMaxYMin xMinYMid xMidYMid
+ltype preserveAspectRatio.align xMaxYMid xMinYMax xMidYMax xMaxYMax
+ltype preserveAspectRatio.meetOrSlice=meet meet slice
+ltype length.unit % em ex px in cm mm pt pc
+ltype angle.unit deg grad rad
+ltype frequency.unit Hz kHz
+ltype transform.method matrix rotate translate scale rotate skewX skewY
+ltype font.style=normal normal italic oblique inherit
+ltype font.variant=normal normal small-caps inherit
+ltype font.weight=inherit inherit normal bold bolder lighter 100 200 300 400
+ltype font.weight 500 600 700 800 900
+ltype font.stretch=normal normal wider narrower ultra-condensed extra-condensed
+ltype font.stretch condensed semi-condensed semi-expanded expanded
+ltype font.stretch extra-expanded ultra-expanded inherit
+ltype font.literal caption icon menu message-box small-caption status-bar
+ltype kerning kerning
+ltype text-decoration.decoration underline overline line-through blink
+ltype color.type rgba rgb # currentColor
+
+// compound types
+
+type transform {method:transform.method==matrix} ( {values:number[6]} )
+type transform {method:transform.method==rotate} ( {values:number[1,3]} )
+type length {value:double} {unit:length.unit}
+
+type inner-color {type:inherit}
+type inner-color {type:color.type==currentColor}
+type inner-color {type:color.type==#} {value:string}
+type inner-color {type:color.type} ( {array:number[]} )
+
+type color {type:inherit==inherit}
+type color {type:color.type==#} {value:string}
+type color {type:color.type} ( {array:number[]} )
+
+type preserveAspectRatio {align:preserveAspectRatio.align}
+type preserveAspectRatio {defer:preserveAspectRatio.defer} {align:preserveAspectRatio.align}
+type preserveAspectRatio {defer:preserveAspectRatio.defer} {align:preserveAspectRatio.align} {meetOrSlice:preserveAspectRatio.meetOrSlice}
+type preserveAspectRatio {align:preserveAspectRatio.align} {meetOrSlice:preserveAspectRatio.meetOrSlice}
+
+// individual attributes
+attribute id string
+attribute width length
+attribute height length
+attribute x length
+attribute y length
+attribute transform transform[]
+attribute class string[]
+attribute color color
+attribute flood-color inner-color

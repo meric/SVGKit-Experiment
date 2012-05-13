@@ -7,7 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#include <stdarg.h>
 
-@interface SVGKit : NSObject
+#ifdef DEBUG
+#define SKWarn(m, ...) \
+NSLog([@"warning: " stringByAppendingString:m], __VA_ARGS__)
+#define SKInfo(m, ...) \
+NSLog([@"info: " stringByAppendingString:m], __VA_ARGS__)
+#else
+#define SKWarn(m, ...) 
+#define SKInfo(m, ...) 
+#endif
 
-@end
+#import "SKNode.h"
+#import "SKDocument.h"
+#import "SKElement.h"
+#import "SKRoot.h"

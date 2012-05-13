@@ -8,12 +8,32 @@
 
 /* Begin PBXBuildFile section */
 		076FC2EF1554D7860030D239 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 076FC2EE1554D7860030D239 /* Cocoa.framework */; };
-		076FC2F91554D7860030D239 /* SVGKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 076FC2F81554D7860030D239 /* SVGKit.m */; };
 		076FC3011554D7870030D239 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 076FC3001554D7870030D239 /* SenTestingKit.framework */; };
 		076FC3021554D7870030D239 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 076FC2EE1554D7860030D239 /* Cocoa.framework */; };
 		076FC3051554D7870030D239 /* libSVGKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 076FC2EB1554D7860030D239 /* libSVGKit.a */; };
 		076FC30B1554D7870030D239 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 076FC3091554D7870030D239 /* InfoPlist.strings */; };
 		076FC30E1554D7870030D239 /* SVGKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 076FC30D1554D7870030D239 /* SVGKitTests.m */; };
+		076FC3491555D85F0030D239 /* Lion.svg in Resources */ = {isa = PBXBuildFile; fileRef = 076FC3431555D60C0030D239 /* Lion.svg */; };
+		07DB60981555DC8300A2C5C3 /* SKDocumentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 07DB60971555DC8300A2C5C3 /* SKDocumentTests.m */; };
+		07E646D5155F92760084AEEA /* SVGKit+DOM.h in Headers */ = {isa = PBXBuildFile; fileRef = 07E646D4155F92760084AEEA /* SVGKit+DOM.h */; };
+		07E646D7155F99E20084AEEA /* SVGKit+DOM.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E646D6155F99E10084AEEA /* SVGKit+DOM.m */; };
+		07E646DC155FC1310084AEEA /* SVGKit+Attribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 07E646DB155FC1310084AEEA /* SVGKit+Attribute.h */; };
+		07F8D034155B535B009D4C83 /* SKElement+DOM.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F8D022155B535B009D4C83 /* SKElement+DOM.h */; };
+		07F8D035155B535B009D4C83 /* SKElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F8D023155B535B009D4C83 /* SKElement.h */; };
+		07F8D036155B535B009D4C83 /* SKElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F8D024155B535B009D4C83 /* SKElement.m */; };
+		07F8D037155B535B009D4C83 /* SKRoot.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F8D025155B535B009D4C83 /* SKRoot.h */; };
+		07F8D038155B535B009D4C83 /* SKRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F8D026155B535B009D4C83 /* SKRoot.m */; };
+		07F8D039155B535B009D4C83 /* SKDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F8D027155B535B009D4C83 /* SKDocument.h */; };
+		07F8D03A155B535B009D4C83 /* SKDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F8D028155B535B009D4C83 /* SKDocument.m */; };
+		07F8D03B155B535B009D4C83 /* SKNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F8D029155B535B009D4C83 /* SKNode.h */; };
+		07F8D03D155B535B009D4C83 /* SVGKit-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 07F8D02B155B535B009D4C83 /* SVGKit-Prefix.pch */; };
+		07F8D03E155B535B009D4C83 /* SVGKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F8D02C155B535B009D4C83 /* SVGKit.h */; };
+		07F8D03F155B535B009D4C83 /* SVGKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F8D02D155B535B009D4C83 /* SVGKit.m */; };
+		07F8D042155B53DE009D4C83 /* SKGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F8D040155B53DE009D4C83 /* SKGroup.h */; };
+		07F8D043155B53DE009D4C83 /* SKGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F8D041155B53DE009D4C83 /* SKGroup.m */; };
+		07F8D045155B5465009D4C83 /* SKRoot+DOM.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F8D044155B5465009D4C83 /* SKRoot+DOM.h */; };
+		07F8D048155BEC97009D4C83 /* SKAttrib.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F8D046155BEC97009D4C83 /* SKAttrib.h */; };
+		07F8D04C155BEDCC009D4C83 /* SKCoreAttribTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 07F8D04B155BEDCC009D4C83 /* SKCoreAttribTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,15 +52,38 @@
 		076FC2F11554D7860030D239 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		076FC2F21554D7860030D239 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		076FC2F31554D7860030D239 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		076FC2F61554D7860030D239 /* SVGKit-Prefix.pch */ = {isa = PBXFileReference; path = "SVGKit-Prefix.pch"; sourceTree = "<group>"; };
-		076FC2F71554D7860030D239 /* SVGKit.h */ = {isa = PBXFileReference; path = SVGKit.h; sourceTree = "<group>"; };
-		076FC2F81554D7860030D239 /* SVGKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SVGKit.m; sourceTree = "<group>"; };
+		076FC2F61554D7860030D239 /* SVGKit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SVGKit-Prefix.pch"; sourceTree = "<group>"; };
 		076FC2FF1554D7870030D239 /* SVGKitTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SVGKitTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		076FC3001554D7870030D239 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		076FC3081554D7870030D239 /* SVGKitTests-Info.plist */ = {isa = PBXFileReference; path = "SVGKitTests-Info.plist"; sourceTree = "<group>"; };
+		076FC3081554D7870030D239 /* SVGKitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SVGKitTests-Info.plist"; sourceTree = "<group>"; };
 		076FC30A1554D7870030D239 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		076FC30C1554D7870030D239 /* SVGKitTests.h */ = {isa = PBXFileReference; path = SVGKitTests.h; sourceTree = "<group>"; };
+		076FC30C1554D7870030D239 /* SVGKitTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SVGKitTests.h; sourceTree = "<group>"; };
 		076FC30D1554D7870030D239 /* SVGKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SVGKitTests.m; sourceTree = "<group>"; };
+		076FC3431555D60C0030D239 /* Lion.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Lion.svg; sourceTree = "<group>"; };
+		07DB60961555DC8300A2C5C3 /* SKDocumentTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKDocumentTests.h; sourceTree = "<group>"; };
+		07DB60971555DC8300A2C5C3 /* SKDocumentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKDocumentTests.m; sourceTree = "<group>"; };
+		07E646D2155F92370084AEEA /* svg.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = svg.py; sourceTree = "<group>"; };
+		07E646D3155F92370084AEEA /* svg.ssv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = svg.ssv; sourceTree = "<group>"; };
+		07E646D4155F92760084AEEA /* SVGKit+DOM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVGKit+DOM.h"; sourceTree = "<group>"; };
+		07E646D6155F99E10084AEEA /* SVGKit+DOM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SVGKit+DOM.m"; sourceTree = "<group>"; };
+		07E646DB155FC1310084AEEA /* SVGKit+Attribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVGKit+Attribute.h"; sourceTree = "<group>"; };
+		07F8D022155B535B009D4C83 /* SKElement+DOM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKElement+DOM.h"; sourceTree = "<group>"; };
+		07F8D023155B535B009D4C83 /* SKElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKElement.h; sourceTree = "<group>"; };
+		07F8D024155B535B009D4C83 /* SKElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKElement.m; sourceTree = "<group>"; };
+		07F8D025155B535B009D4C83 /* SKRoot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKRoot.h; sourceTree = "<group>"; };
+		07F8D026155B535B009D4C83 /* SKRoot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKRoot.m; sourceTree = "<group>"; };
+		07F8D027155B535B009D4C83 /* SKDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKDocument.h; sourceTree = "<group>"; };
+		07F8D028155B535B009D4C83 /* SKDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKDocument.m; sourceTree = "<group>"; };
+		07F8D029155B535B009D4C83 /* SKNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKNode.h; sourceTree = "<group>"; };
+		07F8D02B155B535B009D4C83 /* SVGKit-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVGKit-Prefix.pch"; sourceTree = "<group>"; };
+		07F8D02C155B535B009D4C83 /* SVGKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVGKit.h; sourceTree = "<group>"; };
+		07F8D02D155B535B009D4C83 /* SVGKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVGKit.m; sourceTree = "<group>"; };
+		07F8D040155B53DE009D4C83 /* SKGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKGroup.h; sourceTree = "<group>"; };
+		07F8D041155B53DE009D4C83 /* SKGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKGroup.m; sourceTree = "<group>"; };
+		07F8D044155B5465009D4C83 /* SKRoot+DOM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SKRoot+DOM.h"; sourceTree = "<group>"; };
+		07F8D046155BEC97009D4C83 /* SKAttrib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKAttrib.h; sourceTree = "<group>"; };
+		07F8D04A155BEDCC009D4C83 /* SKCoreAttribTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKCoreAttribTests.h; sourceTree = "<group>"; };
+		07F8D04B155BEDCC009D4C83 /* SKCoreAttribTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKCoreAttribTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,8 +150,10 @@
 		076FC2F41554D7860030D239 /* SVGKit */ = {
 			isa = PBXGroup;
 			children = (
-				076FC2F71554D7860030D239 /* SVGKit.h */,
-				076FC2F81554D7860030D239 /* SVGKit.m */,
+				07F8D02C155B535B009D4C83 /* SVGKit.h */,
+				07F8D02D155B535B009D4C83 /* SVGKit.m */,
+				07F8D019155B535B009D4C83 /* DOM */,
+				07F8D02B155B535B009D4C83 /* SVGKit-Prefix.pch */,
 				076FC2F51554D7860030D239 /* Supporting Files */,
 			);
 			path = SVGKit;
@@ -125,8 +170,13 @@
 		076FC3061554D7870030D239 /* SVGKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				076FC3421555D60C0030D239 /* svg */,
 				076FC30C1554D7870030D239 /* SVGKitTests.h */,
 				076FC30D1554D7870030D239 /* SVGKitTests.m */,
+				07DB60961555DC8300A2C5C3 /* SKDocumentTests.h */,
+				07DB60971555DC8300A2C5C3 /* SKDocumentTests.m */,
+				07F8D04A155BEDCC009D4C83 /* SKCoreAttribTests.h */,
+				07F8D04B155BEDCC009D4C83 /* SKCoreAttribTests.m */,
 				076FC3071554D7870030D239 /* Supporting Files */,
 			);
 			path = SVGKitTests;
@@ -141,6 +191,54 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		076FC3421555D60C0030D239 /* svg */ = {
+			isa = PBXGroup;
+			children = (
+				076FC3431555D60C0030D239 /* Lion.svg */,
+			);
+			path = svg;
+			sourceTree = "<group>";
+		};
+		07F8D019155B535B009D4C83 /* DOM */ = {
+			isa = PBXGroup;
+			children = (
+				07E646D2155F92370084AEEA /* svg.py */,
+				07E646D3155F92370084AEEA /* svg.ssv */,
+				07E646D4155F92760084AEEA /* SVGKit+DOM.h */,
+				07E646D6155F99E10084AEEA /* SVGKit+DOM.m */,
+				07E646DB155FC1310084AEEA /* SVGKit+Attribute.h */,
+				07F8D029155B535B009D4C83 /* SKNode.h */,
+				07F8D027155B535B009D4C83 /* SKDocument.h */,
+				07F8D028155B535B009D4C83 /* SKDocument.m */,
+				07F8D01A155B535B009D4C83 /* Attribute */,
+				07F8D021155B535B009D4C83 /* Element */,
+			);
+			path = DOM;
+			sourceTree = "<group>";
+		};
+		07F8D01A155B535B009D4C83 /* Attribute */ = {
+			isa = PBXGroup;
+			children = (
+				07F8D046155BEC97009D4C83 /* SKAttrib.h */,
+			);
+			path = Attribute;
+			sourceTree = "<group>";
+		};
+		07F8D021155B535B009D4C83 /* Element */ = {
+			isa = PBXGroup;
+			children = (
+				07F8D022155B535B009D4C83 /* SKElement+DOM.h */,
+				07F8D023155B535B009D4C83 /* SKElement.h */,
+				07F8D024155B535B009D4C83 /* SKElement.m */,
+				07F8D044155B5465009D4C83 /* SKRoot+DOM.h */,
+				07F8D025155B535B009D4C83 /* SKRoot.h */,
+				07F8D026155B535B009D4C83 /* SKRoot.m */,
+				07F8D040155B53DE009D4C83 /* SKGroup.h */,
+				07F8D041155B53DE009D4C83 /* SKGroup.m */,
+			);
+			path = Element;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -148,6 +246,18 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07F8D034155B535B009D4C83 /* SKElement+DOM.h in Headers */,
+				07F8D035155B535B009D4C83 /* SKElement.h in Headers */,
+				07F8D037155B535B009D4C83 /* SKRoot.h in Headers */,
+				07F8D039155B535B009D4C83 /* SKDocument.h in Headers */,
+				07F8D03B155B535B009D4C83 /* SKNode.h in Headers */,
+				07F8D03D155B535B009D4C83 /* SVGKit-Prefix.pch in Headers */,
+				07F8D03E155B535B009D4C83 /* SVGKit.h in Headers */,
+				07F8D042155B53DE009D4C83 /* SKGroup.h in Headers */,
+				07F8D045155B5465009D4C83 /* SKRoot+DOM.h in Headers */,
+				07F8D048155BEC97009D4C83 /* SKAttrib.h in Headers */,
+				07E646D5155F92760084AEEA /* SVGKit+DOM.h in Headers */,
+				07E646DC155FC1310084AEEA /* SVGKit+Attribute.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +268,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 076FC3111554D7870030D239 /* Build configuration list for PBXNativeTarget "SVGKit" */;
 			buildPhases = (
+				07F8D08D155D4CA8009D4C83 /* ShellScript */,
 				076FC2E71554D7860030D239 /* Sources */,
 				076FC2E81554D7860030D239 /* Frameworks */,
 				076FC2E91554D7860030D239 /* Headers */,
@@ -222,6 +333,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				076FC3491555D85F0030D239 /* Lion.svg in Resources */,
 				076FC30B1554D7870030D239 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -242,6 +354,19 @@
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
+		07F8D08D155D4CA8009D4C83 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ls | echo; cd SVGKit/DOM; python svg.py";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -249,7 +374,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				076FC2F91554D7860030D239 /* SVGKit.m in Sources */,
+				07F8D036155B535B009D4C83 /* SKElement.m in Sources */,
+				07F8D038155B535B009D4C83 /* SKRoot.m in Sources */,
+				07F8D03A155B535B009D4C83 /* SKDocument.m in Sources */,
+				07F8D03F155B535B009D4C83 /* SVGKit.m in Sources */,
+				07F8D043155B53DE009D4C83 /* SKGroup.m in Sources */,
+				07E646D7155F99E20084AEEA /* SVGKit+DOM.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +388,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				076FC30E1554D7870030D239 /* SVGKitTests.m in Sources */,
+				07DB60981555DC8300A2C5C3 /* SKDocumentTests.m in Sources */,
+				07F8D04C155BEDCC009D4C83 /* SKCoreAttribTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +521,7 @@
 				076FC3131554D7870030D239 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		076FC3141554D7870030D239 /* Build configuration list for PBXNativeTarget "SVGKitTests" */ = {
 			isa = XCConfigurationList;
@@ -397,6 +530,7 @@
 				076FC3161554D7870030D239 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
