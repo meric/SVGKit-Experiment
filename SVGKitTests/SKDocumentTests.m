@@ -57,10 +57,8 @@
     length.unit = SKCM;
     
     STAssertTrue(width != nil, @"");
-    STAssertTrue(width.value == length.value && 
-                 width.unit == length.unit,
-                 @"SKDocument width not saved %@ %@", 
-                 [length description], [width description]);
+    STAssertTrue(width.value == length.value, @"%@ %@", width, length);
+    STAssertTrue(width.unit == length.unit, @"%d %d", width.unit, length.unit);
     [document release];
 }
 

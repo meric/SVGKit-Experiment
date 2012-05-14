@@ -12,6 +12,7 @@ typedef enum SKLiteral {
   SK700,
   SK800,
   SK900,
+  SKBidiOverride,
   SKBlink,
   SKBold,
   SKBolder,
@@ -24,6 +25,8 @@ typedef enum SKLiteral {
   SKDisable,
   SKEM,
   SKEX,
+  SKEmbed,
+  SKEnd,
   SKExpanded,
   SKExtraCondensed,
   SKExtraExpanded,
@@ -38,12 +41,14 @@ typedef enum SKLiteral {
   SKKerning,
   SKLighter,
   SKLineThrough,
+  SKLtr,
   SKMM,
   SKMagnify,
   SKMatrix,
   SKMeet,
   SKMenu,
   SKMessageBox,
+  SKMiddle,
   SKNarrower,
   SKNone,
   SKNormal,
@@ -57,6 +62,7 @@ typedef enum SKLiteral {
   SKRGB,
   SKRGBA,
   SKRotate,
+  SKRtl,
   SKScale,
   SKSemiCondensed,
   SKSemiExpanded,
@@ -65,6 +71,7 @@ typedef enum SKLiteral {
   SKSlice,
   SKSmallCaps,
   SKSmallCaption,
+  SKStart,
   SKStatusBar,
   SKTranslate,
   SKUltraCondensed,
@@ -85,8 +92,8 @@ typedef enum SKLiteral {
 
 BOOL SKScanArray(NSScanner* scanner, NSArray** ptr, 
                  BOOL (*SKScanFN)(NSScanner*,id*), NSArray* valid);
+BOOL SKLiteralInGroup(SKLiteral literal, SKLiteral *valid);
 BOOL SKScanLiteral(NSScanner* scanner, SKLiteral* ptr, SKLiteral* valid);
-
 BOOL SKScanWhitespaces(NSScanner*, NSString**);
 BOOL SKScanSeparator(NSScanner *scanner, NSString**);
 BOOL SKScanNumber(NSScanner *scanner, NSNumber**);
@@ -94,30 +101,84 @@ BOOL SKScanDouble(NSScanner *scanner, double*);
 BOOL SKScanString(NSScanner *scanner, NSString**);
 
 BOOL SKScanNumberArray(NSScanner* scanner, NSArray** ptr);
+BOOL SKScanSingleQuotedString(NSScanner *scanner, NSString **ptr);
+BOOL SKScanDoubleQuotedString(NSScanner *scanner, NSString **ptr);
 BOOL SKScanStringArray(NSScanner* scanner, NSArray** ptr);
 
 // All literal strings. (Must map to enum SKLiteral)
 NSString* SKLiteralString[SKUndefined];
 
-BOOL SKScanNone(NSScanner*, SKLiteral*);
-BOOL SKScanTypeForColor(NSScanner*, SKLiteral*);
-BOOL SKScanStyleForFont(NSScanner*, SKLiteral*);
-BOOL SKScanAlignForPreserveAspectRatio(NSScanner*, SKLiteral*);
-BOOL SKScanNormal(NSScanner*, SKLiteral*);
+BOOL SKScanFontLiteralForStyle(NSScanner*, SKLiteral*);
 BOOL SKScanDeferForPreserveAspectRatio(NSScanner*, SKLiteral*);
 BOOL SKScanUnitForLength(NSScanner*, SKLiteral*);
+BOOL SKScanFontVariantForStyle(NSScanner*, SKLiteral*);
+BOOL SKScanFontStretchForStyle(NSScanner*, SKLiteral*);
+BOOL SKScanKerningForStyle(NSScanner*, SKLiteral*);
+BOOL SKScanMethodForTransform(NSScanner*, SKLiteral*);
+BOOL SKScanUnitForAngle(NSScanner*, SKLiteral*);
+BOOL SKScanTextDecorationForStyle(NSScanner*, SKLiteral*);
+BOOL SKScanDirectionForStyle(NSScanner*, SKLiteral*);
+BOOL SKScanFontWeightForStyle(NSScanner*, SKLiteral*);
+BOOL SKScanNormal(NSScanner*, SKLiteral*);
+BOOL SKScanFontStyleForStyle(NSScanner*, SKLiteral*);
+BOOL SKScanColorForStyle(NSScanner*, SKLiteral*);
+BOOL SKScanZoomAndPan(NSScanner*, SKLiteral*);
+BOOL SKScanTextAnchorForStyle(NSScanner*, SKLiteral*);
+BOOL SKScanNone(NSScanner*, SKLiteral*);
+BOOL SKScanAlignForPreserveAspectRatio(NSScanner*, SKLiteral*);
 BOOL SKScanMeetOrSliceForPreserveAspectRatio(NSScanner*, SKLiteral*);
 BOOL SKScanInherit(NSScanner*, SKLiteral*);
-BOOL SKScanVariantForFont(NSScanner*, SKLiteral*);
-BOOL SKScanKerning(NSScanner*, SKLiteral*);
 BOOL SKScanUnitForFrequency(NSScanner*, SKLiteral*);
-BOOL SKScanWeightForFont(NSScanner*, SKLiteral*);
-BOOL SKScanStretchForFont(NSScanner*, SKLiteral*);
-BOOL SKScanMethodForTransform(NSScanner*, SKLiteral*);
-BOOL SKScanLiteralForFont(NSScanner*, SKLiteral*);
-BOOL SKScanUnitForAngle(NSScanner*, SKLiteral*);
-BOOL SKScanDecorationForTextDecoration(NSScanner*, SKLiteral*);
+BOOL SKScanUnicodeBidiForStyle(NSScanner*, SKLiteral*);
 
+
+@interface SKTransform : NSObject { 
+  NSArray* values;
+  SKLiteral method;
+};
+
+@property (nonatomic,retain)NSArray* values;
+@property SKLiteral method;
+@end
+
+BOOL SKScanTransform(NSScanner*, SKTransform** ptr);
+BOOL SKScanTransformArray(NSScanner*, NSArray** ptr);
+
+@interface SKFontFamily : NSObject { 
+  NSArray* array;
+  SKLiteral inherit;
+};
+
+@property (nonatomic,retain)NSArray* array;
+@property SKLiteral inherit;
+@end
+
+BOOL SKScanFontFamily(NSScanner*, SKFontFamily** ptr);
+BOOL SKScanFontFamilyArray(NSScanner*, NSArray** ptr);
+
+@interface SKLength : NSObject { 
+  SKLiteral unit;
+  double value;
+};
+
+@property SKLiteral unit;
+@property double value;
+@end
+
+BOOL SKScanLength(NSScanner*, SKLength** ptr);
+BOOL SKScanLengthArray(NSScanner*, NSArray** ptr);
+
+@interface SKInnerColor : NSObject { 
+  SKLiteral type;
+  NSString* value;
+};
+
+@property SKLiteral type;
+@property (nonatomic,retain)NSString* value;
+@end
+
+BOOL SKScanInnerColor(NSScanner*, SKInnerColor** ptr);
+BOOL SKScanInnerColorArray(NSScanner*, NSArray** ptr);
 
 @interface SKColor : NSObject { 
   NSArray* array;
@@ -133,31 +194,15 @@ BOOL SKScanDecorationForTextDecoration(NSScanner*, SKLiteral*);
 BOOL SKScanColor(NSScanner*, SKColor** ptr);
 BOOL SKScanColorArray(NSScanner*, NSArray** ptr);
 
-@interface SKInnerColor : NSObject { 
-  NSArray* array;
-  SKLiteral type;
-  NSString* value;
+@interface SKTextDecorationLiteral : NSObject { 
+  SKLiteral decoration;
 };
 
-@property (nonatomic,retain)NSArray* array;
-@property SKLiteral type;
-@property (nonatomic,retain)NSString* value;
+@property SKLiteral decoration;
 @end
 
-BOOL SKScanInnerColor(NSScanner*, SKInnerColor** ptr);
-BOOL SKScanInnerColorArray(NSScanner*, NSArray** ptr);
-
-@interface SKLength : NSObject { 
-  SKLiteral unit;
-  double value;
-};
-
-@property SKLiteral unit;
-@property double value;
-@end
-
-BOOL SKScanLength(NSScanner*, SKLength** ptr);
-BOOL SKScanLengthArray(NSScanner*, NSArray** ptr);
+BOOL SKScanTextDecorationLiteral(NSScanner*, SKTextDecorationLiteral** ptr);
+BOOL SKScanTextDecorationLiteralArray(NSScanner*, NSArray** ptr);
 
 @interface SKPreserveAspectRatio : NSObject { 
   SKLiteral defer;
@@ -173,14 +218,44 @@ BOOL SKScanLengthArray(NSScanner*, NSArray** ptr);
 BOOL SKScanPreserveAspectRatio(NSScanner*, SKPreserveAspectRatio** ptr);
 BOOL SKScanPreserveAspectRatioArray(NSScanner*, NSArray** ptr);
 
-@interface SKTransform : NSObject { 
-  NSArray* values;
-  SKLiteral method;
+@interface SKOptionalNumber : NSObject { 
+  SKLiteral none;
+  NSNumber* value;
+  SKLiteral inherit;
 };
 
-@property (nonatomic,retain)NSArray* values;
-@property SKLiteral method;
+@property SKLiteral none;
+@property (nonatomic,retain)NSNumber* value;
+@property SKLiteral inherit;
 @end
 
-BOOL SKScanTransform(NSScanner*, SKTransform** ptr);
-BOOL SKScanTransformArray(NSScanner*, NSArray** ptr);
+BOOL SKScanOptionalNumber(NSScanner*, SKOptionalNumber** ptr);
+BOOL SKScanOptionalNumberArray(NSScanner*, NSArray** ptr);
+
+@interface SKOptionalLength : NSObject { 
+  SKLength* value;
+  SKLiteral inherit;
+  SKLiteral normal;
+};
+
+@property (nonatomic,retain)SKLength* value;
+@property SKLiteral inherit;
+@property SKLiteral normal;
+@end
+
+BOOL SKScanOptionalLength(NSScanner*, SKOptionalLength** ptr);
+BOOL SKScanOptionalLengthArray(NSScanner*, NSArray** ptr);
+
+@interface SKTextDecoration : NSObject { 
+  SKLiteral none;
+  NSArray* array;
+  SKLiteral inherit;
+};
+
+@property SKLiteral none;
+@property (nonatomic,retain)NSArray* array;
+@property SKLiteral inherit;
+@end
+
+BOOL SKScanTextDecoration(NSScanner*, SKTextDecoration** ptr);
+BOOL SKScanTextDecorationArray(NSScanner*, NSArray** ptr);

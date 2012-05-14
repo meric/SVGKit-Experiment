@@ -11,26 +11,18 @@
 #import "SKRoot.h"
 
 @implementation SKGroup
-@synthesize transform = _transform;
 
 - (id) initWithXMLElement:(NSXMLElement *)element
 {
     self = [super initWithXMLElement:element];
     if (self) {
-        _transform = [[self transformArrayForName:@"transform"] retain];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [_transform release];
     [super dealloc];
-}
-
-- (void)setTransform:(NSArray *)value {
-    [self setValue:[_transform = [value retain] description]
-           forName:@"transform"];
 }
 
 #if 0

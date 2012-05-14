@@ -30,13 +30,12 @@ SKGraphicalEventAttrib__interface();
 SKConditionalProcessingAttrib__interface();
 SKPresentationAttrib__interface();
 
+SKAttribute__property(NSString, *version, *baseProfile);
+SKAttribute__property(NSString, *contentScriptType, *contentStyleType);
 SKAttribute__property(SKLength, *width, *height, *x, *y);
-//SKAttribute__property(NSString, *version, *baseProfile);
-//SKAttribute__property(NSString, *contentScriptType, *contentStyleType);
-//SKAttribute__property(SKLength, *width, *height, *x, *y);
-//SKAttribute__property(NSArray, *viewbox, *classes);
-//SKAttribute__property(SKPreserveAspectRatio, *preserveAspectRatio);
-//SKAttribute__property(SKLiteral, zoomAndPan);
+SKAttribute__property(NSArray, *viewbox, *classes);
+SKAttribute__property(SKPreserveAspectRatio, *preserveAspectRatio);
+SKAttribute__property(SKLiteral, zoomAndPan);
 
 @end
 

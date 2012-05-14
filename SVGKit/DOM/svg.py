@@ -6,9 +6,14 @@ env = Environment(loader=PackageLoader('svg', 'templates'))
 
 PREFIX = "SK"
 
+def error(m):
+  print m
+  exit()
+
 def main():
   commands = {"literal":run_literal, "ltype":run_ltype, "type": run_type,
-              "attribute":run_attribute}
+              "attribute":run_attribute, }
+              #"group":run_group, "elements":run_element}
   state = dict()
   file = open("svg.ssv", "r, b")
   for row in csv.reader(file, delimiter=" "):
@@ -18,21 +23,31 @@ def main():
   save("SVGKit+DOM.h", svgkit_dom(state, "SVGKit+DOM.j.h"))
   save("SVGKit+DOM.m", svgkit_dom(state, "SVGKit+DOM.j.m"))
   save("SVGKit+Attribute.h", svgkit_dom(state, "SVGKit+Attribute.j.h"))
+  #save("SVGKit+Element.h", svgkit_dom(state, "SVGKit+Element.j.h"))
+  #save("SVGKit+Element.m", svgkit_dom(state, "SVGKit+Element.j.m"))
 
 def svgkit_dom(state, f):
   template = env.get_template(f)
   literals = [state["literals"][k] for k in state["literals"]]
-  literals.sort(key=lambda l: l.cstr())
+  literals.sort(key=lambda l: l.c_string())
   ltypes = [state["ltypes"][k] for k in state["ltypes"]]
-  ctypes = [state["ctypes"][k] for k in state["ctypes"]]
-  scanners = [{"name":k, "scan":state["scanners"][k]} for k in state["scanners"]]
+  ctypes = state["ctypes-ordered"]
+  #[state["ctypes"][k] for k in state["ctypes"]]
+  scanners = [{"name":k, "scan":state["scanners"][k]} 
+              for k in state["scanners"]]
+  attributes = [{"name":k, "type":state["attributes"][k]} 
+                for k in state["attributes"]]
+  #elements = [state["elements"][k] for k in state["elements"]]
   return template.render(literals = literals, 
                          ltypes = ltypes,
                          ctypes = ctypes,
+                         attributes = attributes,
+                         #groups = groups,
+                         #elements = elements,
                          scanners = scanners)
 
+cap = lambda s:s[0].upper()+s[1:]
 def translate(svgName):
-  cap = lambda s:s[0].upper()+s[1:]
   return "".join(map(cap, svgName.split("-")))
 
 def save(name, string):
@@ -42,15 +57,15 @@ def save(name, string):
   file.close()
 
 class Literal:
-  def __init__(self, state, value, cvalue=None):
-    self.value = value
-    self.cvalue = cvalue or PREFIX+translate(value)
+  def __init__(self, state, reference, cvalue=None):
+    self._reference = reference
+    self._cvalue = cvalue or PREFIX+translate(reference)
 
   def __str__(self):
-    return self.value
+    return self._reference
 
-  def cstr(self):
-    return self.cvalue
+  def c_string(self):
+    return self._cvalue
 
 def run_literal(state, parameters):
   for parameter in parameters:
@@ -65,35 +80,46 @@ class LiteralType:
     reference__default = reference.split("=")
     if len(reference__default) > 1:
       reference = reference__default[0]
-      self.default = reference__default[1]
+      self._default = reference__default[1]
     else:
-      self.default = None
-    self.reference = reference
-    self.literals = [state["literals"][l] for l in literals]
+      self._default = None
+    self._reference = reference
+    self._literals = [state["literals"][l] for l in literals]
+  
+  def literals(self):
+    return self._literals
+
+  def default(self):
+    return self._default
+  
+  def reference(self):
+    return self._reference
 
   def update(self, state, literals):
-    self.literals += [state["literals"][l] for l in literals]
+    self._literals += [state["literals"][l] for l in literals]
 
-  def astr(self):
-    names = self.reference.split(".")
+  def c_array_string(self):
+    names = self._reference.split(".")
     kind, object = ("", "")
     if len(names) > 1:
       kind, object = names
       kind = translate(kind)
     else:
-      object = self.reference
+      object = self._reference
     if kind:
-      return PREFIX+kind+"__"+object+"Literals"
+      ostr = "".join(map(cap, object.split("-")))
+      ostr = ostr[0].lower()+ostr[1:]
+      return PREFIX+kind+"__"+ostr+"Literals"
     return PREFIX+translate(object)+"Literals"
 
-  def fstr(self):
-    names = self.reference.split(".")
+  def c_scan_function_string(self):
+    names = self._reference.split(".")
     kind, object = ("", "")
     if len(names) > 1:
       kind, object = names
       kind = translate(kind)
     else:
-      object = self.reference
+      object = self._reference
     object = translate(object)
     f = object
     if kind: f+="For"+kind
@@ -105,35 +131,226 @@ def run_ltype(state, parameters):
   state["ltypes"] = state.get("ltypes", {})
   if reference not in state["ltypes"]:
     ltype = LiteralType(state, reference, parameters)
-    state["ltypes"][ltype.reference] = ltype
+    state["ltypes"][ltype.reference()] = ltype
   else:
     state["ltypes"][reference].update(state, parameters)
 
+class InstanceVariable:
+  def __init__(self, state, reference, name):
+    self._state = state
+    self._reference = reference
+    self._name = name
+  
+  def name(self):
+    return self._name
+
+  def c_type_string(self):
+    return type_for_reference(self._state, self._reference)
+
+  def c_name_string(self):
+    return self._name
+
+  def c_default_string(self):
+    if self._reference in self._state["ltypes"]:
+      dref = self._state["ltypes"][self._reference].default()
+      if dref:
+        return self._state["literals"][dref].c_string()
+      return "SKUndefined"
+    return None
+
+  def is_ptr(self):
+    return "*" in self.c_type_string()
+
+class Branch:
+  def __init__(self, state, parent, grammar):
+    self._state = state
+    self._ctype = parent
+    self._grammar = grammar
+    self._contract = {}
+    self._content = ""
+    self._format_str = ""
+    self._format_args = []
+
+    check = ""
+    self._content = ""
+    i = -1
+    for point in self._grammar:
+      i = i + 1
+      var = re.match("^\\{(.+)\\}$", point)
+      if var:
+        name, type__op = var.group(1).split(":")
+        reference = type__op
+        if "==" in type__op:
+          reference, lit = type__op.split("==")
+          lit = self._state["literals"][lit].c_string()
+          check = ("\n    if (b"+str(i)+" && "+name+str(i)+" != "+lit+") b"+
+                   str(i)+"=NO;")
+          self._contract[name] = "{0} == {1}".format(name,lit)
+          self._format_str += format_character_for_reference(state, reference)
+        else:
+          check = ""
+          self._contract[name] = contract_for_reference(self._state, 
+                                                      reference, name)
+          self._format_str += format_character_for_reference(state, reference)
+        type = type_for_reference(self._state, reference)
+        self._format_args += [call_for_format(state, reference, name)]
+        self._content += """
+    {type} {name}{0};
+    BOOL b{0} = {scanner};{check}
+    if (b{0}) result.{name} = {name}{0};
+""".format(str(i), name=name, type=type, check=check,
+     scanner = call_scanner(self._state,reference, name+str(i)))
+      else:
+        self._format_str += "%@"
+        self._format_args += ["@\""+point+"\""]
+        self._content += """
+    BOOL b{0} = [scanner scanString:@"{point}" intoString:nil];
+""".format(str(i), point=point)
+    self._contract = " && ".join([self._contract[k] for k in self._contract])
+
+  def c_scan_success_string(self):
+    return " && ".join(map(lambda i:"b"+str(i),range(0, len(self._grammar))))
+  
+  def c_format_string(self):
+    return "@\""+self._format_str+"\""+","+",\n       ".join(self._format_args)
+  
+  def __str__(self):
+    return self._content
+
+  def c_is_state_string(self):
+    return self._contract or "1"
+
+class CompoundType:
+  def __init__(self, state, reference, grammar):
+    self._reference = reference
+    self._variables = []
+    self._branches = []
+
+    self.update(state, grammar)
+  def branches(self):
+    return self._branches
+  def reference(self):
+    return self._reference
+
+  def update(self, state, grammar):
+    for point in grammar:
+      var = re.match("^\\{(.+)\\}$", point)
+      if var:
+        name, type__op = var.group(1).split(":")
+        type = type__op
+        if "==" in type__op:
+          type, lit = type__op.split("==")
+        else:
+          pass
+        self._variables.append(InstanceVariable(state, type, name))
+    self._branches.append(Branch(state, self, grammar))
+  def ivars(self):
+    d = {}
+    for var in self._variables:
+      d[var.name()] = var
+    return [d[k] for k in d]
+
+  def c_type_string(self):
+    return PREFIX + translate(self._reference)
+
+  def c_scan_function_string(self):
+    return PREFIX + "Scan" + translate(self._reference)
+
+def run_type(state, parameters):
+  reference = parameters[0]
+  parameters = parameters[1:]
+  state["ctypes"] = state.get("ctypes", {})
+  state["ctypes-ordered"] = state.get("ctypes-ordered", [])
+  if reference not in state["ctypes"]:
+    ctype = CompoundType(state, reference, parameters)
+    state["ctypes"][ctype.reference()] = ctype
+    state["ctypes-ordered"].append(ctype)
+  else:
+    state["ctypes"][reference].update(state, parameters)
+
+def run_attribute(state, parameters):
+  attribute_name = parameters[0];
+  type_reference = parameters[1];
+  state["scanners"] = state.get("scanners", {})
+  state["attributes"] = state.get("attributes", {})
+  state["scanners"][attribute_name]=scanner_for_reference(state, type_reference)
+  state["attributes"][attribute_name] = type_reference
+
+class AttributeGroup:
+  def __init__(self, state, reference, attributes):
+    self._state = state
+    self._reference = reference
+    self._attributes = []
+    self.update(state, attributes)
+  def update(self, state, attributes):
+    self._attribute += attributes
+
+def run_group(state, parameters):
+  reference = parameters[0];
+  attributes = parameters[1:];
+  state["groups"] = state.get("groups", {})
+  if referece not in state["groups"]:
+    group = AttributeGroup(state, reference, attributes)
+    state["groups"][reference] = group
+  else:
+    state["groups"][reference].update(state, parameters)
+
+class Element:
+  def __init__(self, state, reference, attributes):
+    self._state = state
+    self._reference = reference
+    self._attributes = []
+    self._groups = []
+    self.update(state, attributes)
+
+  def update(self, state, attributes):
+    for attr in attributes:
+      if attr in state["attributes"]:
+        self._attributes.append(attr)
+      elif attr in state["groups"]:
+        self._groups.append(attr)
+      else:
+        print("undefined attribute/group "+attr)
+        exit()
+
+def run_element(state, parameters):
+  reference = parameters[0];
+  attributes = parameters[1:];
+  state["elements"] = state.get("elements", {})
+  if referece not in state["groups"]:
+    elt = Element(state, reference, attributes)
+    state["elements"][reference] = elt
+  else:
+    state["elements"][reference].update(state, parameters)
+
+# used to check if variable is valid for one of the instance's states.
 def contract_for_reference(state, reference, name):
   if reference in state["ltypes"]:
-    return ("self.{0} != SKUndefined && SKLiteralInGroup({0},{1})"
-              .format(name,state["ltypes"][reference].astr()))
+    return ("{0} != SKUndefined && SKLiteralInGroup({0},{1})"
+              .format(name,state["ltypes"][reference].c_array_string()))
   if reference in state["ctypes"]:
-    return state["ctypes"][reference].tstr()+"*"
+    return  "{0} != nil".format(name)
   if reference == "string":
-    return "self.{0} != nil".format(name)
+    return "{0} != nil".format(name)
   if reference == "number":
-    return "self.{0} != nil".format(name)
+    return "{0} != nil".format(name)
   if reference == "double":
     return "1"
   if "[" in reference and "]" in reference:
-    string = "self.{0} != nil && ".format(name)
-    match = re.match("(.+)\\[(.*)\\]", reference)
+    string = "{0} != nil && ".format(name)
+    match = re.match("(.+)\\[.(.*)\\]", reference)
+    if not match:
+      error("fail to parse " + str(reference))
     lengths = match.group(2)
     if len(lengths) == 0:
       string += "1"
     else:
       valid = []
       for l in lengths.split(","):
-        valid += ["[self.{0} count] == {1}".format(name, l)]
+        valid += ["[{0} count] == {1}".format(name, l)]
       string += "(" + " || ".join(valid) + ")"
     return string
-
+# Format character for the reference type
 def format_character_for_reference(state, reference):
   if reference in state["ltypes"]:
     return "%@"
@@ -148,25 +365,32 @@ def format_character_for_reference(state, reference):
   if "[" in reference and "]" in reference:
     return "%@"
 
+# Format argument for the reference type
 def call_for_format(state, reference, name):
   if reference in state["ltypes"]:
     return "SKLiteralString[self."+name+"]"
   if reference in state["ctypes"]:
-    return "self."+name;
+    return name;
   if reference == "string":
-    return "self."+name;
+    return name;
   if reference == "number":
-    return "self."+name;
+    return name;
   if reference == "double":
-    return "self."+name
+    return name
   if "[" in reference and "]" in reference:
-    return "[self."+name+" componentsJoinedByString:@\",\"]"
+    match = re.match(".+\\[(.).*\\]$", reference)
+    if match.group(1) == ",":
+      return "["+name+" componentsJoinedByString:@\",\"]"
+    elif match.group(1) == "_":
+      return "["+name+" componentsJoinedByString:@\" \"]"
+    error("unexpected separator: "+ reference)
 
+# Get c type
 def type_for_reference(state, reference):
   if reference in state["ltypes"]:
     return "SKLiteral"
   if reference in state["ctypes"]:
-    return state["ctypes"][reference].tstr()+"*"
+    return state["ctypes"][reference].c_type_string()+"*"
   if reference == "string":
     return "NSString*"
   if reference == "number":
@@ -176,11 +400,12 @@ def type_for_reference(state, reference):
   if "[" in reference and "]" in reference:
     return "NSArray*"
 
+# Get C scanner function
 def scanner_for_reference(state, reference):
   if reference in state["ltypes"]:
-    return state["ltypes"][reference].fstr();
+    return state["ltypes"][reference].c_scan_function_string();
   if reference in state["ctypes"]:
-    return state["ctypes"][reference].fstr()
+    return state["ctypes"][reference].c_scan_function_string()
   if reference == "string":
     return "SKScanString"
   if reference == "number":
@@ -188,14 +413,14 @@ def scanner_for_reference(state, reference):
   if reference == "double":
     return "SKScanDouble"
   if "[" in reference and "]" in reference:
-    match = re.match("(.+)\\[\\]", reference)
+    match = re.match("(.+)\\[.+\\]", reference)
     f = match.group(1).strip()
     return scanner_for_reference(state, f)+"Array"
 
-
+# Compose arguments to call on scanner function
 def call_scanner(state, reference, name):
   if "[" in reference and "]" in reference:
-    match = re.match("(.+)\\[(.*)\\]", reference)
+    match = re.match("(.+)\\[.(.*)\\]", reference)
     f = scanner_for_reference(state, match.group(1).strip())
     v = match.group(2)
     if len(v) == 0:
@@ -211,141 +436,6 @@ def call_scanner(state, reference, name):
   else:
     p = "(scanner,&"+name+")"
     return scanner_for_reference(state, reference) + p
-
-class InstanceVariable:
-  def __init__(self, state, reference, name):
-    self.state = state
-    self.reference = reference
-    self.name = name
-
-  def tstr(self):
-    return type_for_reference(self.state, self.reference)
-
-  def nstr(self):
-    return self.name
-
-  def dstr(self):
-    if self.reference in self.state["ltypes"]:
-      dref = self.state["ltypes"][self.reference].default
-      if dref:
-        return self.state["literals"][dref].cstr()
-      return "SKUndefined"
-    return None
-
-  def ptr(self):
-    return "*" in self.tstr()
-
-class Branch:
-  def __init__(self, state, parent, grammar):
-    self.state = state
-    self.ctype = parent
-    self.grammar = grammar
-    self.contract = {}
-    self.content = ""
-    self._format_str = ""
-    self._format_args = []
-
-    check = ""
-    self.content = ""
-    i = -1
-    for point in self.grammar:
-      i = i + 1
-      var = re.match("^\\{(.+)\\}$", point)
-      if var:
-        name, type__op = var.group(1).split(":")
-        reference = type__op
-        if "==" in type__op:
-          reference, lit = type__op.split("==")
-          lit = self.state["literals"][lit].cstr()
-          check = ("\n    if (b"+str(i)+" && "+name+str(i)+" != "+lit+") b"+
-                   str(i)+"=NO;")
-          self.contract[name] = "self.{0} == {1}".format(name,lit)
-          self._format_str += format_character_for_reference(state, reference)
-        else:
-          check = ""
-          self.contract[name] = contract_for_reference(self.state, 
-                                                      reference, name)
-          self._format_str += format_character_for_reference(state, reference)
-        type = type_for_reference(self.state, reference)
-        self._format_args += [call_for_format(state, reference, name)]
-        self.content += """
-    {type} {name}{0};
-    BOOL b{0} = {scanner};{check}
-    if (b{0}) result.{name} = {name}{0};
-""".format(str(i), name=name, type=type, check=check,
-     scanner = call_scanner(self.state,reference, name+str(i)))
-      else:
-        self._format_str += "%@"
-        self._format_args += ["@\""+point+"\""]
-        self.content += """
-    BOOL b{0} = [scanner scanString:@"{point}" intoString:nil];
-""".format(str(i), point=point)
-    self.contract = " && ".join([self.contract[k] for k in self.contract])
-
-  def bstr(self):
-    return " && ".join(map(lambda i:"b"+str(i),range(0, len(self.grammar))))
-  
-  def format(self):
-    return "@\""+self._format_str+"\""+","+",\n       ".join(self._format_args)
-  
-  def __str__(self):
-    return self.content
-
-  def is_state(self):
-    return self.contract
-
-class CompoundType:
-  def __init__(self, state, reference, grammar):
-    self.reference = reference
-    self.variables = []
-    self.branches = []
-
-    self.update(state, grammar)
-
-  def update(self, state, grammar):
-    for point in grammar:
-      var = re.match("^\\{(.+)\\}$", point)
-      if var:
-        name, type__op = var.group(1).split(":")
-        type = type__op
-        if "==" in type__op:
-          type, lit = type__op.split("==")
-        else:
-          pass
-        self.variables.append(InstanceVariable(state, type, name))
-    self.branches.append(Branch(state, self, grammar))
-  def ivars(self):
-    d = {}
-    for var in self.variables:
-      d[var.name] = var
-    return [d[k] for k in d]
-
-  def tstr(self):
-    return PREFIX + translate(self.reference)
-
-  def fstr(self):
-    return PREFIX + "Scan" + translate(self.reference)
-
-def run_type(state, parameters):
-  reference = parameters[0]
-  parameters = parameters[1:]
-  state["ctypes"] = state.get("ctypes", {})
-  if reference not in state["ctypes"]:
-    ctype = CompoundType(state, reference, parameters)
-    state["ctypes"][ctype.reference] = ctype
-  else:
-    state["ctypes"][reference].update(state, parameters)
-
-def run_attribute(state, parameters):
-  attribute_name = parameters[0];
-  type_reference = parameters[1];
-  state["scanners"] = state.get("scanners", {})
-  state["scanners"][attribute_name]=scanner_for_reference(state, type_reference)
-
   
 main()
-
-
-
-
 

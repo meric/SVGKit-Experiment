@@ -10,9 +10,8 @@
 #import "SKElement.h"
 
 @interface SKGroup : SKElement {
-    NSArray *_transform;
 }
 
-@property (nonatomic, retain) NSArray *transform;
+
 
 @end

@@ -123,13 +123,14 @@
 
 - (void)testScanTransform
 {
-    NSString *string = @"scale(1, 2)";
+    NSString *string = @"scale(1 2)";
     NSScanner *scanner = [NSScanner scannerWithString:string];
     [scanner setCharactersToBeSkipped:nil];
     SKTransform* transform;
     BOOL success = SKScanTransform(scanner, &transform);
     string = [string substringFromIndex:[scanner scanLocation]];
     STAssertEquals(success, YES, string);
+    STAssertEqualObjects([transform description], @"scale(1 2)", @"");
 }
 
 - (void)testScanTransformArray
@@ -141,5 +142,25 @@
     NSArray *array;
     SKScanTransformArray(scanner, &array);
     STAssertEquals([array count], (NSUInteger)4, string);
+}
+
+-(void)testScanDoubleQuotedString
+{
+    NSString *string = @"   \"hello  world\"";
+    NSScanner *scanner = [NSScanner scannerWithString:string];
+    [scanner setCharactersToBeSkipped:nil];
+    NSString *val;
+    SKScanDoubleQuotedString(scanner, &val);
+    STAssertEqualObjects(@"hello  world", val, @"");
+}
+
+-(void)testScanSingleQuotedString
+{
+    NSString *string = @"   'hello  world'";
+    NSScanner *scanner = [NSScanner scannerWithString:string];
+    [scanner setCharactersToBeSkipped:nil];
+    NSString *val;
+    SKScanSingleQuotedString(scanner, &val);
+    STAssertEqualObjects(@"hello  world", val, @"");
 }
 @end
