@@ -45,6 +45,15 @@ NSString* SKLiteralString[SKUndefined] = { {% for lit in literals %}
   @"{{ lit }}",{% endfor %}
 };
 
+BOOL SKLiteralInGroup(NSScanner *scanner, SKLiteral literal, SKLiteral *valid) {
+  while(*valid != SKUndefined) {
+    if (literal == *valid++) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
 BOOL SKScanLiteral(NSScanner* scanner, SKLiteral* ptr, SKLiteral* valid) {
   NSUInteger location = scanner.scanLocation;
   SKScanWhitespaces(scanner, nil);
@@ -62,7 +71,7 @@ BOOL SKScanLiteral(NSScanner* scanner, SKLiteral* ptr, SKLiteral* valid) {
 }
 {% for ltype in ltypes %}
 SKLiteral {{ltype.astr()}}[] = {
-  {% for literal in ltype.literals %}{{literal.cstr()}},{% endfor %}
+  {% for literal in ltype.literals %}{{literal.cstr()}},{% endfor %}SKUndefined
 };
 
 BOOL {{ltype.fstr()}}(NSScanner* scanner, SKLiteral* ptr) {
@@ -85,6 +94,13 @@ BOOL {{ltype.fstr()}}(NSScanner* scanner, SKLiteral* ptr) {
 - (void)dealloc { {% for ivar in ctype.ivars() %}{% if ivar.ptr() %}
   {{ivar.name}} = nil;{% endif %}{% endfor %}
   [super dealloc];
+}
+
+- (NSString*)description { {% for branch in ctype.branches %}
+  if ({{branch.is_state()}}) {
+    return [NSString stringWithFormat{{branch.format()}}];
+  }
+  {% endfor %}
 }
 
 @end

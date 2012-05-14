@@ -122,6 +122,15 @@ NSString* SKLiteralString[SKUndefined] = {
   @"xMinYMin",
 };
 
+BOOL SKLiteralInGroup(NSScanner *scanner, SKLiteral literal, SKLiteral *valid) {
+  while(*valid != SKUndefined) {
+    if (literal == *valid++) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
 BOOL SKScanLiteral(NSScanner* scanner, SKLiteral* ptr, SKLiteral* valid) {
   NSUInteger location = scanner.scanLocation;
   SKScanWhitespaces(scanner, nil);
@@ -139,7 +148,7 @@ BOOL SKScanLiteral(NSScanner* scanner, SKLiteral* ptr, SKLiteral* valid) {
 }
 
 SKLiteral SKNoneLiterals[] = {
-  SKNone,
+  SKNone,SKUndefined
 };
 
 BOOL SKScanNone(NSScanner* scanner, SKLiteral* ptr) {
@@ -147,7 +156,7 @@ BOOL SKScanNone(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKColor__typeLiterals[] = {
-  SKRGBA,SKRGB,SKHASH,SKCurrentColor,
+  SKRGBA,SKRGB,SKHASH,SKCurrentColor,SKUndefined
 };
 
 BOOL SKScanTypeForColor(NSScanner* scanner, SKLiteral* ptr) {
@@ -155,7 +164,7 @@ BOOL SKScanTypeForColor(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKFont__styleLiterals[] = {
-  SKNormal,SKItalic,SKOblique,SKInherit,
+  SKNormal,SKItalic,SKOblique,SKInherit,SKUndefined
 };
 
 BOOL SKScanStyleForFont(NSScanner* scanner, SKLiteral* ptr) {
@@ -163,7 +172,7 @@ BOOL SKScanStyleForFont(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKPreserveAspectRatio__alignLiterals[] = {
-  SKXMinYMin,SKXMidYMin,SKXMaxYMin,SKXMinYMid,SKXMidYMid,SKXMaxYMid,SKXMinYMax,SKXMidYMax,SKXMaxYMax,
+  SKXMinYMin,SKXMidYMin,SKXMaxYMin,SKXMinYMid,SKXMidYMid,SKXMaxYMid,SKXMinYMax,SKXMidYMax,SKXMaxYMax,SKUndefined
 };
 
 BOOL SKScanAlignForPreserveAspectRatio(NSScanner* scanner, SKLiteral* ptr) {
@@ -171,7 +180,7 @@ BOOL SKScanAlignForPreserveAspectRatio(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKNormalLiterals[] = {
-  SKNormal,
+  SKNormal,SKUndefined
 };
 
 BOOL SKScanNormal(NSScanner* scanner, SKLiteral* ptr) {
@@ -179,7 +188,7 @@ BOOL SKScanNormal(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKPreserveAspectRatio__deferLiterals[] = {
-  SKDefer,
+  SKDefer,SKUndefined
 };
 
 BOOL SKScanDeferForPreserveAspectRatio(NSScanner* scanner, SKLiteral* ptr) {
@@ -187,7 +196,7 @@ BOOL SKScanDeferForPreserveAspectRatio(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKLength__unitLiterals[] = {
-  SKPercent,SKEM,SKEX,SKPX,SKIN,SKCM,SKMM,SKPT,SKPC,
+  SKPercent,SKEM,SKEX,SKPX,SKIN,SKCM,SKMM,SKPT,SKPC,SKUndefined
 };
 
 BOOL SKScanUnitForLength(NSScanner* scanner, SKLiteral* ptr) {
@@ -195,7 +204,7 @@ BOOL SKScanUnitForLength(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKPreserveAspectRatio__meetOrSliceLiterals[] = {
-  SKMeet,SKSlice,
+  SKMeet,SKSlice,SKUndefined
 };
 
 BOOL SKScanMeetOrSliceForPreserveAspectRatio(NSScanner* scanner, SKLiteral* ptr) {
@@ -203,7 +212,7 @@ BOOL SKScanMeetOrSliceForPreserveAspectRatio(NSScanner* scanner, SKLiteral* ptr)
 }
 
 SKLiteral SKInheritLiterals[] = {
-  SKInherit,
+  SKInherit,SKUndefined
 };
 
 BOOL SKScanInherit(NSScanner* scanner, SKLiteral* ptr) {
@@ -211,7 +220,7 @@ BOOL SKScanInherit(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKFont__variantLiterals[] = {
-  SKNormal,SKSmallCaps,SKInherit,
+  SKNormal,SKSmallCaps,SKInherit,SKUndefined
 };
 
 BOOL SKScanVariantForFont(NSScanner* scanner, SKLiteral* ptr) {
@@ -219,7 +228,7 @@ BOOL SKScanVariantForFont(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKKerningLiterals[] = {
-  SKKerning,
+  SKKerning,SKUndefined
 };
 
 BOOL SKScanKerning(NSScanner* scanner, SKLiteral* ptr) {
@@ -227,7 +236,7 @@ BOOL SKScanKerning(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKFrequency__unitLiterals[] = {
-  SKHZ,SKKHZ,
+  SKHZ,SKKHZ,SKUndefined
 };
 
 BOOL SKScanUnitForFrequency(NSScanner* scanner, SKLiteral* ptr) {
@@ -235,7 +244,7 @@ BOOL SKScanUnitForFrequency(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKFont__weightLiterals[] = {
-  SKInherit,SKNormal,SKBold,SKBolder,SKLighter,SK100,SK200,SK300,SK400,SK500,SK600,SK700,SK800,SK900,
+  SKInherit,SKNormal,SKBold,SKBolder,SKLighter,SK100,SK200,SK300,SK400,SK500,SK600,SK700,SK800,SK900,SKUndefined
 };
 
 BOOL SKScanWeightForFont(NSScanner* scanner, SKLiteral* ptr) {
@@ -243,7 +252,7 @@ BOOL SKScanWeightForFont(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKFont__stretchLiterals[] = {
-  SKNormal,SKWider,SKNarrower,SKUltraCondensed,SKExtraCondensed,SKCondensed,SKSemiCondensed,SKSemiExpanded,SKExpanded,SKExtraExpanded,SKUltraExpanded,SKInherit,
+  SKNormal,SKWider,SKNarrower,SKUltraCondensed,SKExtraCondensed,SKCondensed,SKSemiCondensed,SKSemiExpanded,SKExpanded,SKExtraExpanded,SKUltraExpanded,SKInherit,SKUndefined
 };
 
 BOOL SKScanStretchForFont(NSScanner* scanner, SKLiteral* ptr) {
@@ -251,7 +260,7 @@ BOOL SKScanStretchForFont(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKTransform__methodLiterals[] = {
-  SKMatrix,SKRotate,SKTranslate,SKScale,SKRotate,SKSkewX,SKSkewY,
+  SKMatrix,SKRotate,SKTranslate,SKScale,SKRotate,SKSkewX,SKSkewY,SKUndefined
 };
 
 BOOL SKScanMethodForTransform(NSScanner* scanner, SKLiteral* ptr) {
@@ -259,7 +268,7 @@ BOOL SKScanMethodForTransform(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKFont__literalLiterals[] = {
-  SKCaption,SKIcon,SKMenu,SKMessageBox,SKSmallCaption,SKStatusBar,
+  SKCaption,SKIcon,SKMenu,SKMessageBox,SKSmallCaption,SKStatusBar,SKUndefined
 };
 
 BOOL SKScanLiteralForFont(NSScanner* scanner, SKLiteral* ptr) {
@@ -267,7 +276,7 @@ BOOL SKScanLiteralForFont(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKAngle__unitLiterals[] = {
-  SKDEG,SKGRAD,SKRAD,
+  SKDEG,SKGRAD,SKRAD,SKUndefined
 };
 
 BOOL SKScanUnitForAngle(NSScanner* scanner, SKLiteral* ptr) {
@@ -275,7 +284,7 @@ BOOL SKScanUnitForAngle(NSScanner* scanner, SKLiteral* ptr) {
 }
 
 SKLiteral SKTextDecoration__decorationLiterals[] = {
-  SKUnderline,SKOverline,SKLineThrough,SKBlink,
+  SKUnderline,SKOverline,SKLineThrough,SKBlink,SKUndefined
 };
 
 BOOL SKScanDecorationForTextDecoration(NSScanner* scanner, SKLiteral* ptr) {
@@ -303,6 +312,32 @@ BOOL SKScanDecorationForTextDecoration(NSScanner* scanner, SKLiteral* ptr) {
   [super dealloc];
 }
 
+- (NSString*)description { 
+  if (self.type != SKUndefined && SKLiteralInGroup(type,SKInheritLiterals)) {
+    return [NSString stringWithFormat@"%@",SKLiteralString[self.type]];
+  }
+  
+  if (self.type == SKHASH && self.value != nil) {
+    return [NSString stringWithFormat@"%@%@",SKLiteralString[self.type],
+       self.value];
+  }
+  
+  if (self.array != nil && ([self.array count] == 4) && self.type == SKRGBA) {
+    return [NSString stringWithFormat@"%@%@%@%@",SKLiteralString[self.type],
+       @"(",
+       [self.array componentsJoinedByString:@","],
+       @")"];
+  }
+  
+  if (self.array != nil && ([self.array count] == 3) && self.type == SKRGB) {
+    return [NSString stringWithFormat@"%@%@%@%@",SKLiteralString[self.type],
+       @"(",
+       [self.array componentsJoinedByString:@","],
+       @")"];
+  }
+  
+}
+
 @end
 
 BOOL SKScanColor(NSScanner* scanner, SKColor** ptr) {
@@ -312,8 +347,7 @@ BOOL SKScanColor(NSScanner* scanner, SKColor** ptr) {
     NSUInteger location = scanner.scanLocation;
     
     SKLiteral type0;
-    BOOL b0 = SKScanTypeForColor(scanner,&type0);
-    if (b0 && type0 != SKInherit) b0=NO;
+    BOOL b0 = SKScanInherit(scanner,&type0);
     if (b0) result.type = type0;
 
     if (b0) {
@@ -347,12 +381,40 @@ BOOL SKScanColor(NSScanner* scanner, SKColor** ptr) {
     
     SKLiteral type0;
     BOOL b0 = SKScanTypeForColor(scanner,&type0);
+    if (b0 && type0 != SKRGBA) b0=NO;
     if (b0) result.type = type0;
 
     BOOL b1 = [scanner scanString:@"(" intoString:nil];
 
     NSArray* array2;
-    BOOL b2 = SKScanArray(scanner,&array2,SKScanNumber,NULL);
+    BOOL b2 = SKScanArray(scanner,&array2,SKScanNumber,
+      [NSArray arrayWithObjects:
+        [NSNumber numberWithInt:4],nil]);
+    if (b2) result.array = array2;
+
+    BOOL b3 = [scanner scanString:@")" intoString:nil];
+
+    if (b0 && b1 && b2 && b3) {
+      *ptr = result;
+      return YES;
+    }
+    scanner.scanLocation = location;
+  }
+  {
+    SKColor* result = [[SKColor new] autorelease];
+    NSUInteger location = scanner.scanLocation;
+    
+    SKLiteral type0;
+    BOOL b0 = SKScanTypeForColor(scanner,&type0);
+    if (b0 && type0 != SKRGB) b0=NO;
+    if (b0) result.type = type0;
+
+    BOOL b1 = [scanner scanString:@"(" intoString:nil];
+
+    NSArray* array2;
+    BOOL b2 = SKScanArray(scanner,&array2,SKScanNumber,
+      [NSArray arrayWithObjects:
+        [NSNumber numberWithInt:3],nil]);
     if (b2) result.array = array2;
 
     BOOL b3 = [scanner scanString:@")" intoString:nil];
@@ -392,6 +454,29 @@ BOOL SKScanColorArray(NSScanner* scanner, NSArray** ptr) {
   [super dealloc];
 }
 
+- (NSString*)description { 
+  if (self.type != SKUndefined && SKLiteralInGroup(type,SKInheritLiterals)) {
+    return [NSString stringWithFormat@"%@",SKLiteralString[self.type]];
+  }
+  
+  if (self.type == SKCurrentColor) {
+    return [NSString stringWithFormat@"%@",SKLiteralString[self.type]];
+  }
+  
+  if (self.type == SKHASH && self.value != nil) {
+    return [NSString stringWithFormat@"%@%@",SKLiteralString[self.type],
+       self.value];
+  }
+  
+  if (self.array != nil && 1 && self.type != SKUndefined && SKLiteralInGroup(type,SKColor__typeLiterals)) {
+    return [NSString stringWithFormat@"%@%@%@%@",SKLiteralString[self.type],
+       @"(",
+       [self.array componentsJoinedByString:@","],
+       @")"];
+  }
+  
+}
+
 @end
 
 BOOL SKScanInnerColor(NSScanner* scanner, SKInnerColor** ptr) {
@@ -401,7 +486,7 @@ BOOL SKScanInnerColor(NSScanner* scanner, SKInnerColor** ptr) {
     NSUInteger location = scanner.scanLocation;
     
     SKLiteral type0;
-    BOOL b0 = SKScanTypeForColor(scanner,&type0);
+    BOOL b0 = SKScanInherit(scanner,&type0);
     if (b0) result.type = type0;
 
     if (b0) {
@@ -492,6 +577,18 @@ BOOL SKScanInnerColorArray(NSScanner* scanner, NSArray** ptr) {
   [super dealloc];
 }
 
+- (NSString*)description { 
+  if (self.unit != SKUndefined && SKLiteralInGroup(unit,SKLength__unitLiterals) && 1) {
+    return [NSString stringWithFormat@"%f%@",self.value,
+       SKLiteralString[self.unit]];
+  }
+  
+  if (1) {
+    return [NSString stringWithFormat@"%f",self.value];
+  }
+  
+}
+
 @end
 
 BOOL SKScanLength(NSScanner* scanner, SKLength** ptr) {
@@ -509,6 +606,20 @@ BOOL SKScanLength(NSScanner* scanner, SKLength** ptr) {
     if (b1) result.unit = unit1;
 
     if (b0 && b1) {
+      *ptr = result;
+      return YES;
+    }
+    scanner.scanLocation = location;
+  }
+  {
+    SKLength* result = [[SKLength new] autorelease];
+    NSUInteger location = scanner.scanLocation;
+    
+    double value0;
+    BOOL b0 = SKScanDouble(scanner,&value0);
+    if (b0) result.value = value0;
+
+    if (b0) {
       *ptr = result;
       return YES;
     }
@@ -541,6 +652,29 @@ BOOL SKScanLengthArray(NSScanner* scanner, NSArray** ptr) {
 
 - (void)dealloc { 
   [super dealloc];
+}
+
+- (NSString*)description { 
+  if (self.align != SKUndefined && SKLiteralInGroup(align,SKPreserveAspectRatio__alignLiterals)) {
+    return [NSString stringWithFormat@"%@",SKLiteralString[self.align]];
+  }
+  
+  if (self.defer != SKUndefined && SKLiteralInGroup(defer,SKPreserveAspectRatio__deferLiterals) && self.align != SKUndefined && SKLiteralInGroup(align,SKPreserveAspectRatio__alignLiterals)) {
+    return [NSString stringWithFormat@"%@%@",SKLiteralString[self.defer],
+       SKLiteralString[self.align]];
+  }
+  
+  if (self.defer != SKUndefined && SKLiteralInGroup(defer,SKPreserveAspectRatio__deferLiterals) && self.align != SKUndefined && SKLiteralInGroup(align,SKPreserveAspectRatio__alignLiterals) && self.meetOrSlice != SKUndefined && SKLiteralInGroup(meetOrSlice,SKPreserveAspectRatio__meetOrSliceLiterals)) {
+    return [NSString stringWithFormat@"%@%@%@",SKLiteralString[self.defer],
+       SKLiteralString[self.align],
+       SKLiteralString[self.meetOrSlice]];
+  }
+  
+  if (self.align != SKUndefined && SKLiteralInGroup(align,SKPreserveAspectRatio__alignLiterals) && self.meetOrSlice != SKUndefined && SKLiteralInGroup(meetOrSlice,SKPreserveAspectRatio__meetOrSliceLiterals)) {
+    return [NSString stringWithFormat@"%@%@",SKLiteralString[self.align],
+       SKLiteralString[self.meetOrSlice]];
+  }
+  
 }
 
 @end
@@ -646,6 +780,51 @@ BOOL SKScanPreserveAspectRatioArray(NSScanner* scanner, NSArray** ptr) {
   [super dealloc];
 }
 
+- (NSString*)description { 
+  if (self.values != nil && ([self.values count] == 6) && self.method == SKMatrix) {
+    return [NSString stringWithFormat@"%@%@%@%@",SKLiteralString[self.method],
+       @"(",
+       [self.values componentsJoinedByString:@","],
+       @")"];
+  }
+  
+  if (self.values != nil && ([self.values count] == 1 || [self.values count] == 3) && self.method == SKRotate) {
+    return [NSString stringWithFormat@"%@%@%@%@",SKLiteralString[self.method],
+       @"(",
+       [self.values componentsJoinedByString:@","],
+       @")"];
+  }
+  
+  if (self.values != nil && ([self.values count] == 1 || [self.values count] == 2) && self.method == SKTranslate) {
+    return [NSString stringWithFormat@"%@%@%@%@",SKLiteralString[self.method],
+       @"(",
+       [self.values componentsJoinedByString:@","],
+       @")"];
+  }
+  
+  if (self.values != nil && ([self.values count] == 1 || [self.values count] == 2) && self.method == SKScale) {
+    return [NSString stringWithFormat@"%@%@%@%@",SKLiteralString[self.method],
+       @"(",
+       [self.values componentsJoinedByString:@","],
+       @")"];
+  }
+  
+  if (self.values != nil && ([self.values count] == 1) && self.method == SKSkewX) {
+    return [NSString stringWithFormat@"%@%@%@%@",SKLiteralString[self.method],
+       @"(",
+       [self.values componentsJoinedByString:@","],
+       @")"];
+  }
+  
+  if (self.values != nil && ([self.values count] == 1) && self.method == SKSkewY) {
+    return [NSString stringWithFormat@"%@%@%@%@",SKLiteralString[self.method],
+       @"(",
+       [self.values componentsJoinedByString:@","],
+       @")"];
+  }
+  
+}
+
 @end
 
 BOOL SKScanTransform(NSScanner* scanner, SKTransform** ptr) {
@@ -664,8 +843,7 @@ BOOL SKScanTransform(NSScanner* scanner, SKTransform** ptr) {
     NSArray* values2;
     BOOL b2 = SKScanArray(scanner,&values2,SKScanNumber,
       [NSArray arrayWithObjects:
-        [NSNumber numberWithInt:1],
-        [NSNumber numberWithInt:3],nil]);
+        [NSNumber numberWithInt:6],nil]);
     if (b2) result.values = values2;
 
     BOOL b3 = [scanner scanString:@")" intoString:nil];
@@ -692,6 +870,108 @@ BOOL SKScanTransform(NSScanner* scanner, SKTransform** ptr) {
       [NSArray arrayWithObjects:
         [NSNumber numberWithInt:1],
         [NSNumber numberWithInt:3],nil]);
+    if (b2) result.values = values2;
+
+    BOOL b3 = [scanner scanString:@")" intoString:nil];
+
+    if (b0 && b1 && b2 && b3) {
+      *ptr = result;
+      return YES;
+    }
+    scanner.scanLocation = location;
+  }
+  {
+    SKTransform* result = [[SKTransform new] autorelease];
+    NSUInteger location = scanner.scanLocation;
+    
+    SKLiteral method0;
+    BOOL b0 = SKScanMethodForTransform(scanner,&method0);
+    if (b0 && method0 != SKTranslate) b0=NO;
+    if (b0) result.method = method0;
+
+    BOOL b1 = [scanner scanString:@"(" intoString:nil];
+
+    NSArray* values2;
+    BOOL b2 = SKScanArray(scanner,&values2,SKScanNumber,
+      [NSArray arrayWithObjects:
+        [NSNumber numberWithInt:1],
+        [NSNumber numberWithInt:2],nil]);
+    if (b2) result.values = values2;
+
+    BOOL b3 = [scanner scanString:@")" intoString:nil];
+
+    if (b0 && b1 && b2 && b3) {
+      *ptr = result;
+      return YES;
+    }
+    scanner.scanLocation = location;
+  }
+  {
+    SKTransform* result = [[SKTransform new] autorelease];
+    NSUInteger location = scanner.scanLocation;
+    
+    SKLiteral method0;
+    BOOL b0 = SKScanMethodForTransform(scanner,&method0);
+    if (b0 && method0 != SKScale) b0=NO;
+    if (b0) result.method = method0;
+
+    BOOL b1 = [scanner scanString:@"(" intoString:nil];
+
+    NSArray* values2;
+    BOOL b2 = SKScanArray(scanner,&values2,SKScanNumber,
+      [NSArray arrayWithObjects:
+        [NSNumber numberWithInt:1],
+        [NSNumber numberWithInt:2],nil]);
+    if (b2) result.values = values2;
+
+    BOOL b3 = [scanner scanString:@")" intoString:nil];
+
+    if (b0 && b1 && b2 && b3) {
+      *ptr = result;
+      return YES;
+    }
+    scanner.scanLocation = location;
+  }
+  {
+    SKTransform* result = [[SKTransform new] autorelease];
+    NSUInteger location = scanner.scanLocation;
+    
+    SKLiteral method0;
+    BOOL b0 = SKScanMethodForTransform(scanner,&method0);
+    if (b0 && method0 != SKSkewX) b0=NO;
+    if (b0) result.method = method0;
+
+    BOOL b1 = [scanner scanString:@"(" intoString:nil];
+
+    NSArray* values2;
+    BOOL b2 = SKScanArray(scanner,&values2,SKScanNumber,
+      [NSArray arrayWithObjects:
+        [NSNumber numberWithInt:1],nil]);
+    if (b2) result.values = values2;
+
+    BOOL b3 = [scanner scanString:@")" intoString:nil];
+
+    if (b0 && b1 && b2 && b3) {
+      *ptr = result;
+      return YES;
+    }
+    scanner.scanLocation = location;
+  }
+  {
+    SKTransform* result = [[SKTransform new] autorelease];
+    NSUInteger location = scanner.scanLocation;
+    
+    SKLiteral method0;
+    BOOL b0 = SKScanMethodForTransform(scanner,&method0);
+    if (b0 && method0 != SKSkewY) b0=NO;
+    if (b0) result.method = method0;
+
+    BOOL b1 = [scanner scanString:@"(" intoString:nil];
+
+    NSArray* values2;
+    BOOL b2 = SKScanArray(scanner,&values2,SKScanNumber,
+      [NSArray arrayWithObjects:
+        [NSNumber numberWithInt:1],nil]);
     if (b2) result.values = values2;
 
     BOOL b3 = [scanner scanString:@")" intoString:nil];

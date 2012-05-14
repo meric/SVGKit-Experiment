@@ -20,7 +20,7 @@
     SKDocument *document = [[SKDocument alloc]initWithSVGString:svg
                                                           error:nil];
     SKRoot *root = document.root;
-    //STAssertEqualObjects(root.identifier, @"hello", @"");
+    STAssertEqualObjects(root.identifier, @"hello", @"");
     //STAssertEquals(root.zoomAndPan, SKMagnifyZoomAndPan, @"");
 }
 

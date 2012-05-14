@@ -15,12 +15,6 @@
 @interface SKRoot : SKElement
 {
     SKDocument *_document;
-    
-    /*
-    contentScriptType
-    contentStyleType
-    */
-    
 }
 
 #if 0
@@ -36,11 +30,7 @@ SKGraphicalEventAttrib__interface();
 SKConditionalProcessingAttrib__interface();
 SKPresentationAttrib__interface();
 
-SKAttribute__property(SKLength, *width);
-SKAttribute__property(SKLength, *height);
-SKAttribute__property(SKLength, *x);
-SKAttribute__property(SKLength, *y);
-
+SKAttribute__property(SKLength, *width, *height, *x, *y);
 //SKAttribute__property(NSString, *version, *baseProfile);
 //SKAttribute__property(NSString, *contentScriptType, *contentStyleType);
 //SKAttribute__property(SKLength, *width, *height, *x, *y);

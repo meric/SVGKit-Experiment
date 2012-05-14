@@ -111,119 +111,14 @@
     }
 }
 
-// Common attribute types
+// Get string from attribute
 
 - (NSString*)stringForName:(NSString*)attributeName {
     NSXMLNode *node = [_element attributeForName:attributeName];
     if (node) return [node stringValue];
     return nil;
 }
-/*
-- (SKLength*)lengthForName:(NSString*)attributeName {
-    NSString *string = [self stringForName:attributeName];
-    if (!string) return nil;
-    NSScanner *scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
-    struct SKQuantity length = SKMakeQuantity(0, SKNumber);
-    if (SKScanLength(scanner, &length))
-        return [SKLength lengthWithQuantity:length];
-    return nil;
-}
 
-- (NSNumber*)numberForName:(NSString*)attributeName {
-    NSString *string = [self stringForName:attributeName];
-    if (!string) return NULL;
-    NSScanner *scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
-    double number;
-    if (SKScanNumber(scanner, &number)) {
-        return [NSNumber numberWithDouble:number];
-    }
-    return nil;
-}
-
-- (NSArray*)transformArrayForName:(NSString*)attributeName {
-    NSString *string = [self stringForName:attributeName];
-    if (!string) return nil;
-    NSScanner *scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
-    NSArray *array = nil;
-    SKScanTransformArray(scanner, &array);
-    return array;
-}
-
-- (NSArray*)lengthArrayForName:(NSString*)attributeName {
-    NSString *string = [self stringForName:attributeName];
-    if (!string) return nil;
-    NSScanner *scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
-    NSArray *array = nil;
-    SKScanLengthArray(scanner, &array);
-    return array;
-}
-
-- (SKPreserveAspectRatio*)preserveAspectRatioForName:(NSString*)attributeName {
-    NSString *string = [self stringForName:attributeName];
-    if (!string) return nil;
-    NSScanner *scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
-    SKLiteralSet ratio;
-    if (SKScanPreserveAspectRatio(scanner, &ratio)) {
-        return [SKPreserveAspectRatio 
-                preserveAspectRatioWithLiteralSet:ratio];
-    }
-    return nil;
-}
-
-- (NSArray*)stringArrayForName:(NSString*)attributeName {
-    NSString *string = [self stringForName:attributeName];
-    if (!string) return nil;
-    NSScanner *scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
-    
-    NSString *wsp = [[NSCharacterSet whitespaceCharacterSet] characters];
-    NSString *sep = [wsp stringByAppendingString:@","];
-    NSCharacterSet *s = [NSCharacterSet characterSetWithCharactersInString:sep];
-    s = [s invertedSet];
-    NSArray *array = nil;
-    SKScanStringArray(scanner, &array, s);
-    return array;
-}
-
-- (NSArray*)classArrayForName:(NSString*)attributeName {
-    NSString *string = [self stringForName:attributeName];
-    if (!string) return nil;
-    NSScanner *scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
-    NSArray *array = nil;
-    SKScanStringArray(scanner, &array, [NSCharacterSet letterCharacterSet]);
-    return array;
-}
-
-- (SKLiteral)literalForName:(NSString*)attributeName {
-    NSString *string = [self stringForName:attributeName];
-    if (!string) return SKUnknownLiteral;
-    NSScanner *scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
-    SKLiteral literal;
-    if (SKScanLiteral(scanner, &literal)) {
-        return literal;
-    }
-    return SKUnknownLiteral;
-}
-
-- (SKColor*)colorForName:(NSString*)attributeName {
-    NSString *string = [self stringForName:attributeName];
-    if (!string) return nil;
-    NSScanner *scanner = [NSScanner scannerWithString:string];
-    [scanner setCharactersToBeSkipped:nil];
-    NSUInteger color;
-    if (SKScanColor(scanner, &color)) {
-        return [SKColor colorWithColor:color];
-    }
-    return [SKColor color];
-}
-*/
 #if 0
 #pragma mark --- SKNode ---
 #endif

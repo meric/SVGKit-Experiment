@@ -6,6 +6,7 @@ __attribute__((constructor))
 static void initialize_scannerForAttribute() {
   scannerForAttribute = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
     [NSNumber numberWithUnsignedLong:(size_t)SKScanInnerColor],@"flood-color",
+    [NSNumber numberWithUnsignedLong:(size_t)SKScanDouble],@"flood-opacity",
     [NSNumber numberWithUnsignedLong:(size_t)SKScanColor],@"color",
     [NSNumber numberWithUnsignedLong:(size_t)SKScanStringArray],@"class",
     [NSNumber numberWithUnsignedLong:(size_t)SKScanTransformArray],@"transform",
@@ -13,6 +14,7 @@ static void initialize_scannerForAttribute() {
     [NSNumber numberWithUnsignedLong:(size_t)SKScanLength],@"width",
     [NSNumber numberWithUnsignedLong:(size_t)SKScanLength],@"y",
     [NSNumber numberWithUnsignedLong:(size_t)SKScanLength],@"x",
+    [NSNumber numberWithUnsignedLong:(size_t)SKScanPreserveAspectRatio],@"preserveAspectRatio",
     [NSNumber numberWithUnsignedLong:(size_t)SKScanString],@"id",
     nil];
 }

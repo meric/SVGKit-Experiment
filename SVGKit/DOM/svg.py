@@ -109,6 +109,58 @@ def run_ltype(state, parameters):
   else:
     state["ltypes"][reference].update(state, parameters)
 
+def contract_for_reference(state, reference, name):
+  if reference in state["ltypes"]:
+    return ("self.{0} != SKUndefined && SKLiteralInGroup({0},{1})"
+              .format(name,state["ltypes"][reference].astr()))
+  if reference in state["ctypes"]:
+    return state["ctypes"][reference].tstr()+"*"
+  if reference == "string":
+    return "self.{0} != nil".format(name)
+  if reference == "number":
+    return "self.{0} != nil".format(name)
+  if reference == "double":
+    return "1"
+  if "[" in reference and "]" in reference:
+    string = "self.{0} != nil && ".format(name)
+    match = re.match("(.+)\\[(.*)\\]", reference)
+    lengths = match.group(2)
+    if len(lengths) == 0:
+      string += "1"
+    else:
+      valid = []
+      for l in lengths.split(","):
+        valid += ["[self.{0} count] == {1}".format(name, l)]
+      string += "(" + " || ".join(valid) + ")"
+    return string
+
+def format_character_for_reference(state, reference):
+  if reference in state["ltypes"]:
+    return "%@"
+  if reference in state["ctypes"]:
+    return "%@"
+  if reference == "string":
+    return "%@"
+  if reference == "number":
+    return "%@"
+  if reference == "double":
+    return "%f"
+  if "[" in reference and "]" in reference:
+    return "%@"
+
+def call_for_format(state, reference, name):
+  if reference in state["ltypes"]:
+    return "SKLiteralString[self."+name+"]"
+  if reference in state["ctypes"]:
+    return "self."+name;
+  if reference == "string":
+    return "self."+name;
+  if reference == "number":
+    return "self."+name;
+  if reference == "double":
+    return "self."+name
+  if "[" in reference and "]" in reference:
+    return "[self."+name+" componentsJoinedByString:@\",\"]"
 
 def type_for_reference(state, reference):
   if reference in state["ltypes"]:
@@ -188,37 +240,59 @@ class Branch:
     self.state = state
     self.ctype = parent
     self.grammar = grammar
-  def bstr(self):
-    return " && ".join(map(lambda i:"b"+str(i),range(0, len(self.grammar))))
-  def __str__(self):
-    ivars = {item.name:item for item in self.ctype.ivars()}
+    self.contract = {}
+    self.content = ""
+    self._format_str = ""
+    self._format_args = []
+
     check = ""
-    content = ""
+    self.content = ""
     i = -1
     for point in self.grammar:
       i = i + 1
       var = re.match("^\\{(.+)\\}$", point)
       if var:
         name, type__op = var.group(1).split(":")
-        type = type__op
+        reference = type__op
         if "==" in type__op:
-          type, lit = type__op.split("==")
+          reference, lit = type__op.split("==")
           lit = self.state["literals"][lit].cstr()
           check = ("\n    if (b"+str(i)+" && "+name+str(i)+" != "+lit+") b"+
                    str(i)+"=NO;")
+          self.contract[name] = "self.{0} == {1}".format(name,lit)
+          self._format_str += format_character_for_reference(state, reference)
         else:
           check = ""
-        content += """
+          self.contract[name] = contract_for_reference(self.state, 
+                                                      reference, name)
+          self._format_str += format_character_for_reference(state, reference)
+        type = type_for_reference(self.state, reference)
+        self._format_args += [call_for_format(state, reference, name)]
+        self.content += """
     {type} {name}{0};
     BOOL b{0} = {scanner};{check}
     if (b{0}) result.{name} = {name}{0};
-""".format(str(i), name=name, type=ivars[name].tstr(), check=check,
-     scanner = call_scanner(self.state,ivars[name].reference, name+str(i)))
+""".format(str(i), name=name, type=type, check=check,
+     scanner = call_scanner(self.state,reference, name+str(i)))
       else:
-        content += """
+        self._format_str += "%@"
+        self._format_args += ["@\""+point+"\""]
+        self.content += """
     BOOL b{0} = [scanner scanString:@"{point}" intoString:nil];
 """.format(str(i), point=point)
-    return content
+    self.contract = " && ".join([self.contract[k] for k in self.contract])
+
+  def bstr(self):
+    return " && ".join(map(lambda i:"b"+str(i),range(0, len(self.grammar))))
+  
+  def format(self):
+    return "@\""+self._format_str+"\""+","+",\n       ".join(self._format_args)
+  
+  def __str__(self):
+    return self.content
+
+  def is_state(self):
+    return self.contract
 
 class CompoundType:
   def __init__(self, state, reference, grammar):

@@ -24,16 +24,6 @@
 - (void)removedFromParent;
 - (void)setValue:(NSString *)value forName:(NSString*)name;
 - (NSString*)stringForName:(NSString*)attributeName;
-- (SKLength*)lengthForName:(NSString*)attributeName;
-- (NSArray*)transformArrayForName:(NSString*)attributeName;
-- (NSArray*)lengthArrayForName:(NSString*)attributeName;
-- (SKPreserveAspectRatio*)preserveAspectRatioForName:(NSString*)attributeName;
-- (NSArray*)stringArrayForName:(NSString*)attributeName;
-- (NSArray*)classArrayForName:(NSString*)attributeName;
-- (SKLiteral)literalForName:(NSString*)attributeName;
-- (SKColor*)colorForName:(NSString*)attributeName;
-- (NSNumber*)numberForName:(NSString*)attributeName;
-
 @end
 
 /*
@@ -56,6 +46,7 @@
         call(scanner, &val);\
     }\
     if (val) [_attributes setObject:val forKey:name];\
+    if (!number) SKWarn(@"scanner for %@ attribute not implemented", name);\
 }
 
 #define SKAttribute__set(name)\

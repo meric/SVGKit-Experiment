@@ -13,7 +13,7 @@
 #import "SKRoot.h"
 
 @implementation SKDocumentTests
-/*
+
 - (void)testSimple
 {
     SKDocument *document = [SKDocument new];
@@ -22,7 +22,7 @@
     [document release];
 }
 
-- (void)testWidthAttribute
+- (void)testWidth
 {
     NSString *svg = @"<svg wIdth=\"1\" height=\"2\"></svg>";
     SKDocument *document = [[SKDocument alloc] initWithSVGString:svg error:nil];
@@ -31,7 +31,7 @@
     STAssertEqualObjects(svg, [document.root XMLString], @"");
     [document release];
 }
-*/
+
 - (void)testParse
 {
     NSError *error;

@@ -73,16 +73,16 @@
     STAssertEqualObjects([color.array objectAtIndex:3], 
                          [NSNumber numberWithDouble:1.0], @"");
 }
-/*
 - (void)testScanLength
 {
     NSString* string = @"3";
     NSScanner *scanner = [NSScanner scannerWithString:string];
     [scanner setCharactersToBeSkipped:nil];
-    struct SKQuantity length;
+    SKLength* length;
     BOOL success = SKScanLength(scanner, &length);
     STAssertEquals(success, YES, @"");
-    STAssertEquals(length.unit, SKNumber, @"");
+    STAssertEquals(length.unit, SKUndefined, @"");
+    STAssertEquals(length.value, 3.0, @"");
 }
 
 - (void)testScanWhitespaces 
@@ -115,8 +115,8 @@
     NSString *string = @"   scale  ";
     NSScanner *scanner = [NSScanner scannerWithString:string];
     [scanner setCharactersToBeSkipped:nil];
-    SKTransformMethod method;
-    BOOL success = SKScanMethod(scanner, &method);
+    SKLiteral method;
+    BOOL success = SKScanMethodForTransform(scanner, &method);
     string = [string substringFromIndex:[scanner scanLocation]];
     STAssertEquals(success, YES, @"parse %@ failed ", string);
 }
@@ -126,7 +126,7 @@
     NSString *string = @"scale(1, 2)";
     NSScanner *scanner = [NSScanner scannerWithString:string];
     [scanner setCharactersToBeSkipped:nil];
-    struct SKTransform transform;
+    SKTransform* transform;
     BOOL success = SKScanTransform(scanner, &transform);
     string = [string substringFromIndex:[scanner scanLocation]];
     STAssertEquals(success, YES, string);
@@ -142,5 +142,4 @@
     SKScanTransformArray(scanner, &array);
     STAssertEquals([array count], (NSUInteger)4, string);
 }
-*/
 @end
