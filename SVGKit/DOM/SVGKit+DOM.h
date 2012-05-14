@@ -194,16 +194,6 @@ BOOL SKScanInnerColorArray(NSScanner*, NSArray** ptr);
 BOOL SKScanColor(NSScanner*, SKColor** ptr);
 BOOL SKScanColorArray(NSScanner*, NSArray** ptr);
 
-@interface SKTextDecorationLiteral : NSObject { 
-  SKLiteral decoration;
-};
-
-@property SKLiteral decoration;
-@end
-
-BOOL SKScanTextDecorationLiteral(NSScanner*, SKTextDecorationLiteral** ptr);
-BOOL SKScanTextDecorationLiteralArray(NSScanner*, NSArray** ptr);
-
 @interface SKPreserveAspectRatio : NSObject { 
   SKLiteral defer;
   SKLiteral align;
@@ -217,6 +207,16 @@ BOOL SKScanTextDecorationLiteralArray(NSScanner*, NSArray** ptr);
 
 BOOL SKScanPreserveAspectRatio(NSScanner*, SKPreserveAspectRatio** ptr);
 BOOL SKScanPreserveAspectRatioArray(NSScanner*, NSArray** ptr);
+
+@interface SKTextDecorationLiteral : NSObject { 
+  SKLiteral decoration;
+};
+
+@property SKLiteral decoration;
+@end
+
+BOOL SKScanTextDecorationLiteral(NSScanner*, SKTextDecorationLiteral** ptr);
+BOOL SKScanTextDecorationLiteralArray(NSScanner*, NSArray** ptr);
 
 @interface SKOptionalNumber : NSObject { 
   SKLiteral none;

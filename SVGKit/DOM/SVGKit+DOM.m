@@ -829,20 +829,6 @@ BOOL SKScanInnerColorArray(NSScanner* scanner, NSArray** ptr) {
 }
 
 - (NSString*)description { 
-  if (array != nil && ([array count] == 4) && type == SKRGBA) {
-    return [NSString stringWithFormat:@"%@%@%@%@",SKLiteralString[self.type],
-       @"(",
-       [array componentsJoinedByString:@","],
-       @")"];
-  }
-  
-  if (array != nil && ([array count] == 3) && type == SKRGB) {
-    return [NSString stringWithFormat:@"%@%@%@%@",SKLiteralString[self.type],
-       @"(",
-       [array componentsJoinedByString:@","],
-       @")"];
-  }
-  
   if (type != SKUndefined && SKLiteralInGroup(type,SKInheritLiterals)) {
     return [NSString stringWithFormat:@"%@",SKLiteralString[self.type]];
   }
@@ -874,56 +860,6 @@ BOOL SKScanInnerColorArray(NSScanner* scanner, NSArray** ptr) {
 
 BOOL SKScanColor(NSScanner* scanner, SKColor** ptr) {
   NSUInteger location = scanner.scanLocation;
-  {
-    SKColor* result = [[SKColor new] autorelease];
-    NSUInteger location = scanner.scanLocation;
-    
-    SKLiteral type0;
-    BOOL b0 = SKScanColorForStyle(scanner,&type0);
-    if (b0 && type0 != SKRGBA) b0=NO;
-    if (b0) result.type = type0;
-
-    BOOL b1 = [scanner scanString:@"(" intoString:nil];
-
-    NSArray* array2;
-    BOOL b2 = SKScanArray(scanner,&array2,SKScanNumber,
-      [NSArray arrayWithObjects:
-        [NSNumber numberWithInt:4],nil]);
-    if (b2) result.array = array2;
-
-    BOOL b3 = [scanner scanString:@")" intoString:nil];
-
-    if (b0 && b1 && b2 && b3) {
-      *ptr = result;
-      return YES;
-    }
-    scanner.scanLocation = location;
-  }
-  {
-    SKColor* result = [[SKColor new] autorelease];
-    NSUInteger location = scanner.scanLocation;
-    
-    SKLiteral type0;
-    BOOL b0 = SKScanColorForStyle(scanner,&type0);
-    if (b0 && type0 != SKRGB) b0=NO;
-    if (b0) result.type = type0;
-
-    BOOL b1 = [scanner scanString:@"(" intoString:nil];
-
-    NSArray* array2;
-    BOOL b2 = SKScanArray(scanner,&array2,SKScanNumber,
-      [NSArray arrayWithObjects:
-        [NSNumber numberWithInt:3],nil]);
-    if (b2) result.array = array2;
-
-    BOOL b3 = [scanner scanString:@")" intoString:nil];
-
-    if (b0 && b1 && b2 && b3) {
-      *ptr = result;
-      return YES;
-    }
-    scanner.scanLocation = location;
-  }
   {
     SKColor* result = [[SKColor new] autorelease];
     NSUInteger location = scanner.scanLocation;
@@ -1014,58 +950,6 @@ BOOL SKScanColor(NSScanner* scanner, SKColor** ptr) {
 // Scan indeterminate sized array
 BOOL SKScanColorArray(NSScanner* scanner, NSArray** ptr) {
   return SKScanArray(scanner, ptr, SKScanColor, NULL);
-}
-
-// SKTextDecorationLiteral
-@implementation SKTextDecorationLiteral
-@synthesize decoration;
-
-- (id)init {
-  self = [super init];
-  if (self) { 
-    decoration = SKUndefined;
-  }
-  return self;
-}
-
-- (void)dealloc { 
-  [super dealloc];
-}
-
-- (NSString*)description { 
-  if (decoration != SKUndefined && SKLiteralInGroup(decoration,SKStyle__textDecorationLiterals)) {
-    return [NSString stringWithFormat:@"%@",SKLiteralString[self.decoration]];
-  }
-  
-  SKWarn(@"Cannot find suitable description %@", @"");
-  return [super description];
-}
-
-@end
-
-BOOL SKScanTextDecorationLiteral(NSScanner* scanner, SKTextDecorationLiteral** ptr) {
-  NSUInteger location = scanner.scanLocation;
-  {
-    SKTextDecorationLiteral* result = [[SKTextDecorationLiteral new] autorelease];
-    NSUInteger location = scanner.scanLocation;
-    
-    SKLiteral decoration0;
-    BOOL b0 = SKScanTextDecorationForStyle(scanner,&decoration0);
-    if (b0) result.decoration = decoration0;
-
-    if (b0) {
-      *ptr = result;
-      return YES;
-    }
-    scanner.scanLocation = location;
-  }
-  scanner.scanLocation = location;
-  return NO;
-}
-
-// Scan indeterminate sized array
-BOOL SKScanTextDecorationLiteralArray(NSScanner* scanner, NSArray** ptr) {
-  return SKScanArray(scanner, ptr, SKScanTextDecorationLiteral, NULL);
 }
 
 // SKPreserveAspectRatio
@@ -1196,6 +1080,58 @@ BOOL SKScanPreserveAspectRatio(NSScanner* scanner, SKPreserveAspectRatio** ptr) 
 // Scan indeterminate sized array
 BOOL SKScanPreserveAspectRatioArray(NSScanner* scanner, NSArray** ptr) {
   return SKScanArray(scanner, ptr, SKScanPreserveAspectRatio, NULL);
+}
+
+// SKTextDecorationLiteral
+@implementation SKTextDecorationLiteral
+@synthesize decoration;
+
+- (id)init {
+  self = [super init];
+  if (self) { 
+    decoration = SKUndefined;
+  }
+  return self;
+}
+
+- (void)dealloc { 
+  [super dealloc];
+}
+
+- (NSString*)description { 
+  if (decoration != SKUndefined && SKLiteralInGroup(decoration,SKStyle__textDecorationLiterals)) {
+    return [NSString stringWithFormat:@"%@",SKLiteralString[self.decoration]];
+  }
+  
+  SKWarn(@"Cannot find suitable description %@", @"");
+  return [super description];
+}
+
+@end
+
+BOOL SKScanTextDecorationLiteral(NSScanner* scanner, SKTextDecorationLiteral** ptr) {
+  NSUInteger location = scanner.scanLocation;
+  {
+    SKTextDecorationLiteral* result = [[SKTextDecorationLiteral new] autorelease];
+    NSUInteger location = scanner.scanLocation;
+    
+    SKLiteral decoration0;
+    BOOL b0 = SKScanTextDecorationForStyle(scanner,&decoration0);
+    if (b0) result.decoration = decoration0;
+
+    if (b0) {
+      *ptr = result;
+      return YES;
+    }
+    scanner.scanLocation = location;
+  }
+  scanner.scanLocation = location;
+  return NO;
+}
+
+// Scan indeterminate sized array
+BOOL SKScanTextDecorationLiteralArray(NSScanner* scanner, NSArray** ptr) {
+  return SKScanArray(scanner, ptr, SKScanTextDecorationLiteral, NULL);
 }
 
 // SKOptionalNumber
